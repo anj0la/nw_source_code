@@ -2,19 +2,18 @@
  * 
  * File: nw_openmp.c
  * Author: Anjola Aina
- * Student ID: 1673923
- * Last Modified: Saturday, March 23rd, 2024
+ * Last Modified: Thursday, April 18th, 2024
  * 
  * Information:
  * 
- * This function implements the Needleman_Wunsch algorithm in parallel using OpenMP directives. It uses a Cell matrix, holding the score and the direction of the sequence to make the traceback portion of the 
+ * This function implements the Needleman-Wunsch algorithm in parallel using OpenMP directives. It uses a Cell matrix, holding the score and the direction of the sequence to make the traceback portion of the 
  * algorithm easier to compute.
  * 
  * For simplicity, we assume that the two sequences are of equal length.
  * 
  * Running the Program:
  * 
- * To run the program, specify the correct number of parameters (6), which are the following:
+ * To run the program, specify the correct number of parameters (7), which are the following:
  *  - text1.txt - the first text file to write the first sequence into
  *  - text2.txt - the second text file to write the second sequence into
  *  - 4 - the length of both sequences
@@ -23,11 +22,11 @@
  *  - -1 - mistmatch score
  *  - -2 - gap penalty
  * 
- * The code should be executed in your chosen terminal (system terminal or using an IDE for C) ./[executable_file_name] [first file] [second file] [length] [match] [mismatch] [gap_penalty]
+ * The code should be executed in your chosen terminal (system terminal or using an IDE for C: ./[executable_file_name] [first file] [second file] [length] [num_threads] [match] [mismatch] [gap_penalty]
  * Say we have our executable file compiled called nw_openmp, with two text files seq1.txt and seq2.txt and their respective lengths 4 characters, and a match, mismatch and gap penalty score of 1, -1 and -2 respectively.
  * Then, we would write the following line to the terminal:
  * 
- *      ./nw_mp_ad seq1.txt seq2.txt 4 8 1 -1 -2
+ *      ./nw_openmp seq1.txt seq2.txt 4 8 1 -1 -2
  * 
  * Sources: 
  * 
@@ -82,9 +81,13 @@ void nw_p(char* s1, char* s2, int thread_count, int match, int mis_match, int ga
 // =============== CODE ===============
 
 int main(int argc, char* argv[]) {
-
-    // error checking for parameters
     srand(time(NULL));
+    // error checking for parameters
+    int check_params = check_if_correct_num_params_specified(argc);
+    if (check_params != TRUE) {
+        return 1; // stop execution
+    }
+
     generate_rand_seqs(argv[1], argv[2], atoi(argv[3]));
 
     char* s1 = get_seq(argv[1]);
@@ -104,17 +107,12 @@ int main(int argc, char* argv[]) {
     struct timeval start;
 	struct timeval end;
 
-    // timing program (obselete, using Nvidia Nsight Systems)
-    
+    // timing program
     gettimeofday(&start, NULL);
     nw_p(s1, s2, thread_count, match, mis_match, gap); 
     gettimeofday(&end, NULL);
 
-    // checking to ensure that our results are the same as our sequential implementation
-
-
     // getting and printing result
-    
     double seconds_s = (double) (end.tv_usec - start.tv_usec) / 1000000 +
          (double) (end.tv_sec - start.tv_sec);
     printf("Time taken to execute nw: %f seconds\n", seconds_s);
@@ -141,9 +139,9 @@ int min(int a, int b) {
 */
 int check_if_correct_num_params_specified(int argc) {
     if (argc < NUM_ARGS || argc > NUM_ARGS) {
-		return 0; // not enough or too much arguments were specified
+		return FALSE; // not enough or too much arguments were specified
 	}
-	return 1; // correct num of arguments were specified
+	return TRUE; // correct num of arguments were specified
 } // check_if_correct_num_params_specified
 
 /**
@@ -265,7 +263,7 @@ void init_matrix_p(Cell** matrix, int m, int n, int gap) {
 
 /**
  * Implements the matrix filling step of the algorithm, by filling in all of the cells in the matrix using the anti-diagonal approach, 
- * to execute the algorithm in parallel, avoiding data dependencies.
+ * to execute the algorithm in parallel, avoiding some of the data dependencies.
  * @param s1 the first sequence
  * @param s2 the second sequence
  * @param matrix the cell matrix to be filled wiih the scores and the matrix
@@ -306,8 +304,6 @@ void fill_matrix_p(char* s1, char* s2, Cell** matrix, int thread_count, int matc
         #pragma omp barrier
     } // outer for
 } // parallel region
-
-
 } // fill_matrix_p
 
 /**
@@ -348,7 +344,7 @@ void traceback_matrix(char* s1, char* s2, Cell** matrix) {
 
     // step 4 - reverse them and obtain the sequences 
 
-    // print the aligned sequences
+    // print the aligned sequences (gets too long when sequence length is large)
     //printf("S1 Aligned: %s\n", strrev(s1_align));
     //printf("S2 Aligned: %s\n", strrev(s2_align));
 

@@ -3,7 +3,7 @@
  * File: nw_serial.c
  * Author: Anjola Aina
  * Student ID: 1673923
- * Last Modified: Thursday, April 4th, 2024
+ * Last Modified: Thursday, April 18th, 2024
  * 
  * Information:
  * 
@@ -78,9 +78,14 @@ void nw(char* s1, char* s2, int match, int mis_match, int gap);
 // =============== CODE ===============
 
 int main(int argc, char* argv[]) {
+    srand(time(NULL));
 
     // error checking for parameters
-    srand(time(NULL));
+    int check_params = check_if_correct_num_params_specified(argc);
+    if (check_params != TRUE) {
+        return 1; // stop execution
+    }
+
     generate_rand_seqs(argv[1], argv[2], atoi(argv[3]));
 
     char* s1 = get_seq(argv[1]);
@@ -126,9 +131,9 @@ int main(int argc, char* argv[]) {
 */
 int check_if_correct_num_params_specified(int argc) {
     if (argc < NUM_ARGS || argc > NUM_ARGS) {
-		return 0; // not enough or too much arguments were specified
+		return FALSE; // not enough or too much arguments were specified
 	}
-	return 1; // correct num of arguments were specified
+	return TRUE; // correct num of arguments were specified
 } // check_if_correct_num_params_specified
 
 /**
@@ -315,7 +320,7 @@ void traceback_matrix(char* s1, char* s2, Cell** matrix) {
     s1_align[k] = '\0';
     s2_align[k] = '\0';
 
-    // step 4 - reverse them and print the seuqence 
+    // step 4 - reverse them and print the sequences (gets too long when sequence length is large) 
     // print the aligned sequences
     //printf("S1 Aligned: %s\n", strrev(s1_align));
     //printf("S2 Aligned: %s\n", strrev(s2_align));
