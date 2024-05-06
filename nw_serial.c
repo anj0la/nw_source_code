@@ -2,7 +2,6 @@
  * 
  * File: nw_serial.c
  * Author: Anjola Aina
- * Student ID: 1673923
  * Last Modified: Thursday, April 18th, 2024
  * 
  * Information:
