@@ -10,17 +10,28 @@ When running the program, we assume that the two sequences are of equal length.
 ## To run the serial version of the algorithm:
 
 1. Compile the program using the following line:
- *      gcc nw_serial.c -o nw_serial
+```bash
+ gcc nw_serial.c -o nw_serial
+```
 2. Execute the code in your chosen terminal (system terminal or using an IDE for C):
- *      ./[executable_file_name] [first file] [second file] [length] [match] [mismatch] [gap_penalty]
+```bash
+./[executable_file_name] [first file] [second file] [length] [match] [mismatch] [gap_penalty]
+```   
 3. With nw_serial, seq1.txt and seq2.txt:
- *      ./nw_serial seq1.txt seq2.txt 4 1 -1 -2
-
+```bash
+./nw_serial seq1.txt seq2.txt 4 1 -1 -2
+```
 ## To run the parallel version of the algorithm:
 
 1. Compile the program using the following line:
- *      nvc -fast -Minfo=all -mp nw_openmp.c -o nw_openmp
+```bash
+nvc -fast -Minfo=all -mp nw_openmp.c -o nw_openmp
+```
 2. Execute the code in your chosen terminal (system terminal or using an IDE for C):
- *      ./[executable_file_name] [first file] [second file] [length] [thread] [match] [mismatch] [gap_penalty]
+```bash
+./[executable_file_name] [first file] [second file] [length] [thread] [match] [mismatch] [gap_penalty]
+```
 3. With nw_serial, seq1.txt, seq2.txt and 8 threads:
- *      ./nw_openmp seq1.txt seq2.txt 4 8 1 -1 -2
+```bash
+./nw_openmp seq1.txt seq2.txt 4 8 1 -1 -2
+```
