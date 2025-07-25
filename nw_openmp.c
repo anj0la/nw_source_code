@@ -284,7 +284,7 @@ void fill_matrix_p(char* s1, char* s2, Cell** matrix, int thread_count, int matc
     for (diag = 1; diag <= m + n - 1; diag++) {
         int start = max(1, diag - n + 1);
         int end = min(m, diag);
-        #pragma omp parallel for
+        #pragma omp for
         for (i = start; i <= end; i++) {
             j = diag - i + 1;
             match_or_mismatch = matrix[i - 1][j - 1].score + (s1[i - 1] == s2[j - 1] ? match : mis_match);
